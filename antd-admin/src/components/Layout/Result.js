@@ -72,7 +72,7 @@ class Result extends React.Component {
     let conclusion = allResult && conclusionDes.find((c)=>{ return c.data === allResult.conclusion })
     return (
       <div className={styles.resultWrapper}>
-        <Tabs type="card">
+        {/*<Tabs type="card">
           <TabPane tab="ROI" key="1"><img src={`${APIV2}${allResult && allResult.roi_path}`} alt="" style={{width: '60%',marginLeft: '20%'}}/></TabPane>
           <TabPane tab="Heatmap" key="2"><img src={`${APIV2}${allResult && allResult.heatmap_path}`} alt="" style={{width: '60%', marginLeft: '20%'}}/></TabPane>
         </Tabs>
@@ -93,7 +93,7 @@ class Result extends React.Component {
                      onClick: () => {this.labelInfo( record, index )},
                    };
                  }}/>
-        </div>
+        </div>*/}
 
         <div>
           <div className={styles.resultTitle}>医师确认结果</div>

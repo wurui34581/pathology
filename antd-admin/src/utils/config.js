@@ -2,7 +2,7 @@ const APIV1 = '/api/v1'
 const APIV2 = 'http://192.168.10.178:8080'
 
 module.exports = {
-  name: '病理智能辅助诊断平台',
+  name: '病理标注工具',
   prefix: 'antdAdmin',
   footerText: '清影医疗 © 2018',
   logo: '/public/logo.png',

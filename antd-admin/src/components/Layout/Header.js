@@ -224,10 +224,10 @@ export default class Header extends React.Component {
             >
               <Icon type={classnames({ 'menu-unfold': siderFold, 'menu-fold': !siderFold })} />
             </div>
-          <div className={styles.upload} onClick={this.showDrawer.bind(this)}>
+          {/*<div className={styles.upload} onClick={this.showDrawer.bind(this)}>
             <Icon type="folder-add" theme="outlined" style={{ fontSize: 16, paddingRight: 12   }} />
             <span>影像导入</span>
-          </div>
+          </div>*/}
         </div>
 
         <div className={styles.rightWarpper}>

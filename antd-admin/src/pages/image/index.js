@@ -62,7 +62,7 @@ class Image extends React.Component{
       })
       let viewer = this.viewer;
       this.annotations = new OpenSeadragon.Annotations({ viewer })
-      let loc = []
+      /*let loc = []
       results && results.length?
         results.map((item,index)=>{
           let anno = [
@@ -80,7 +80,7 @@ class Image extends React.Component{
           loc.push(anno)
         }):null
       this.annotations.model.annotations = loc;
-      this.annotations.setAnnotations(loc)
+      this.annotations.setAnnotations(loc)*/
 
       dispatch({ type: 'app/picState', payload: false })
     }

@@ -116,7 +116,7 @@ class App extends React.Component{
       <div>
         <Loader fullScreen spinning={loading.effects['app/query']} />
         <Helmet>
-          <title>病理智能辅助诊断平台</title>
+          <title>病理标注工具</title>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <link rel="icon" href={logo} type="image/x-icon" />
           {iconFontJS && <script src={iconFontJS} />}
