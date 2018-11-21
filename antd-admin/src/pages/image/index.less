@@ -1,0 +1,55 @@
+
+.mainWrapper{
+  width: 100%;
+  height: 100%;
+  .tool{
+    margin: 0 0 2%;
+    padding: 10px;
+    background: #f0f2f5;
+    font-size: 28px;
+    height: 8%;
+    i {
+      padding-right: 15px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .loadingWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .miniMapWrapper{
+    position: absolute !important;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    z-index: 999;
+    .readSlider{
+      flex: 0 0 20px;
+      padding: 0 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      .value_text{
+        display: inline-block;
+        text-align: center;
+        font-size: 14px;
+        text-shadow: 0 2px 4px 0 rgba(0,0,0,0.85);
+      }
+    }
+    .miniMap{
+      height: 150px;
+      width: 156px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px 0 rgba(68,68,68,0.5);
+      z-index: 1000 !important;
+    }
+  }
+}
+
+.overlay{
+  border: 1px solid red;
+}
