@@ -24,63 +24,14 @@ class Image extends React.Component{
   }
 
   componentDidMount () {
-    const { app:{ picUrl, allResult }, dispatch } = this.props;
-    /*if(!this.viewer.areAnnotationsActive()){
-      this.viewer.initializeAnnotations();
-    }*/
-    //oanno(this.viewer)
-    //console.log(oanno(this.viewer),'---viewer----')
-
+    this.openSeadragonInfo()
   }
 
   componentDidUpdate ( prevProps ) {
-    const { app: { picUrl, results, curLabel, labelState, picState, labelIndex }, dispatch } = this.props;
+    const { app: { picUrl, results, labelState, picState, labelIndex }, dispatch } = this.props;
     if ( picUrl && picState && results.length ) {
-      console.log(results,'-----')
       this.viewer && this.viewer.destroy()
-      this.viewer = OpenSeadragon({
-        id: "openseadragon1",
-        prefixUrl: "/public/data/open/images/",
-        tileSources: `${APIV2}${picUrl}`,
-        showNavigator: true,
-        navigatorPosition: 'BOTTOM_RIGHT',
-        zoomInButton: 'zoom-in',
-        zoomOutButton: 'zoom-out',
-        fullPageButton: 'full-page',
-        nextButton: 'next',
-        previousButton: 'previous',
-        //navigatorId: 'miniMap',
-        navigatorWidth: 150,
-        navigatorHeight: 150,
-        isibilityRatio: 0.4,
-        minZoomLevel: 0.9,
-        maxZoomLevel: 40,
-        zoomPerClick: 4,
-        constrainDuringPan: true,
-        panVertical: true,
-        showSequenceControl:true,
-      })
-      let viewer = this.viewer;
-      this.annotations = new OpenSeadragon.Annotations({ viewer })
-      let loc = []
-      results && results.length?
-        results.map((item,index)=>{
-          let anno = [
-            'path',
-            {
-              d:item.annotation,
-              'fill': "none",
-              'stroke': "blue",
-              'stroke-linecap': "round",
-              'stroke-linejoin': "round",
-              'stroke-width': "2",
-              'vector-effect': "non-scaling-stroke",
-            }
-          ]
-          loc.push(anno)
-        }):null
-      this.annotations.model.annotations = loc;
-      this.annotations.setAnnotations(loc)
+      this.openSeadragonInfo()
 
       dispatch({ type: 'app/picState', payload: false })
     }
@@ -90,7 +41,55 @@ class Image extends React.Component{
     }
   }
 
-  optionPic ( type, index ) {
+  openSeadragonInfo() {
+    const { app:{ picUrl, results } } = this.props;
+
+    this.viewer = OpenSeadragon({
+      id: "openseadragon1",
+      prefixUrl: "/public/data/open/images/",
+      tileSources: `${APIV2}${picUrl}`,
+      showNavigator: true,
+      navigatorPosition: 'BOTTOM_RIGHT',
+      zoomInButton: 'zoom-in',
+      zoomOutButton: 'zoom-out',
+      fullPageButton: 'full-page',
+      nextButton: 'next',
+      previousButton: 'previous',
+      //navigatorId: 'miniMap',
+      navigatorWidth: 150,
+      navigatorHeight: 150,
+      isibilityRatio: 0.4,
+      minZoomLevel: 0.9,
+      maxZoomLevel: 40,
+      zoomPerClick: 4,
+      constrainDuringPan: true,
+      panVertical: true,
+      showSequenceControl:true,
+    })
+    let viewer = this.viewer;
+    this.annotations = new OpenSeadragon.Annotations({ viewer })
+    let loc = []
+    results && results.length?
+      results.map((item)=>{
+        let anno = [
+          'path',
+          {
+            d:item.annotation,
+            'fill': "none",
+            'stroke': "blue",
+            'stroke-linecap': "round",
+            'stroke-linejoin': "round",
+            'stroke-width': "2",
+            'vector-effect': "non-scaling-stroke",
+          }
+        ]
+        loc.push(anno)
+      }):null
+    this.annotations.model.annotations = loc;
+    this.annotations.setAnnotations(loc)
+  }
+
+  /*optionPic ( type, index ) {
     const { curPage } = this.state;
     const { dispatch } = this.props;
     //const { app:{ picUrl } } = this.props;
@@ -133,7 +132,7 @@ class Image extends React.Component{
 
       }
     }
-  }
+  }*/
 
   handleMouseWheel(event){
     let wheelDirection = event.deltaY;
@@ -166,10 +165,6 @@ class Image extends React.Component{
     }
   }
 
-  toSpecial() {
-    this.viewer.viewport.panTo(new OpenSeadragon.Point(0.2,0.2), true)
-      .zoomTo(20);
-  }
   saveLabel(){
     const { app: { picId, results, allResult } } = this.props;
     let annotations = this.annotations.model.annotations.slice(results.length);
@@ -204,7 +199,7 @@ class Image extends React.Component{
             })
           }
         </div>*/}
-        <div id="openseadragon1" style={{width: '100%',height: '90%'}} />
+        <div id="openseadragon1" style={{width: '100%',height: '95%'}} />
         <div className={styles.miniMapWrapper}>
           <div className={styles.readSlider}>
             {/*<Slider defaultValue={30} />*/}

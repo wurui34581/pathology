@@ -1,7 +1,7 @@
 import { request, config } from 'utils'
 
 const { api } = config
-const { user, userLogout, userLogin, getPatients, resource, getResult, postAll } = api
+const { user, userLogout, userLogin, getPatients, resource, getResult, postAll, postPic } = api
 
 export function login (params) {
   return request({
@@ -53,6 +53,14 @@ export function result (params) {
 export function allLabel (params) {
   return request({
     url: postAll,
+    method: 'post',
+    data: params
+  })
+}
+
+export function postPicUrl (params) {
+  return request({
+    url: postPic,
     method: 'post',
     data: params
   })

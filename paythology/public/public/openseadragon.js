@@ -10330,7 +10330,7 @@ window.OpenSeadragon = window.OpenSeadragon || function(a) { return new OpenSead
     if (options.controlOptions.anchor != $.ControlAnchor.NONE) {
       (function(style, borderWidth) {
         style.margin = '0px';
-        style.border = borderWidth + 'px solid #555';
+        //style.border = borderWidth + 'px solid #555';
         style.padding = '0px';
         style.background = '#000';
         style.opacity = 0.8;

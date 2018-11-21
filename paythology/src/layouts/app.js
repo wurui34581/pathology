@@ -70,6 +70,9 @@ class App extends React.Component{
       changeOpenKeys (openKeys) {
         dispatch({ type: 'app/handleNavOpenKeys', payload: { navOpenKeys: openKeys } })
       },
+      localPicUrl (folder) {
+        dispatch({ type: 'app/postPicUrl', payload: { folder } })
+      },
     }
 
     const siderProps = {
@@ -128,7 +131,7 @@ class App extends React.Component{
             trigger={null}
             collapsible
             collapsed={siderFold}
-            width={250}>
+            width={280}>
             <MyLayout.PatientList {...siderProps} />
           </Sider>}
           <Layout style={{ height: '100vh' }} id="mainContainer">

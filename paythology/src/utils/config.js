@@ -23,12 +23,12 @@ module.exports = {
     v1test: `${APIV1}/test`,
     v2test: `${APIV1}/test`,
 
-    task: `${APIV1}/task`,
-    getPatients: `${APIV2}/get`,
-    resource: `${APIV2}/resource/:id`,
-    getResult: `${APIV2}/result/:job_id`,
-    postLabel: `${APIV2}/post`,
-    postAll: `${APIV2}/json_all`,
-
+    //task: `${APIV1}/task`,
+    getPatients: `${APIV2}/patients`,
+    // resource: `${APIV2}/resource/:id`,
+    // getResult: `${APIV2}/result/:job_id`,
+    postLabel: `${APIV2}/labels`,
+    postAll: `${APIV2}/conclusion_all`,
+    postPic: `${APIV2}/upload`,
   },
 }

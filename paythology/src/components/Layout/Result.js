@@ -78,10 +78,10 @@ class Result extends React.Component {
         </Tabs>
         <div>
           <div className={styles.resultTitle}>智能诊断结果</div>
-          <div className={styles.resultInfo}>智能诊断结论：{conclusion && conclusion.des}</div>
-          <div className={styles.resultInfo}>平均阳性概率：{allResult && allResult.probability && `${allResult.probability}%`}</div>
-          <div className={styles.resultInfo}>疑似患癌区域个数：{allResult && allResult.probability && `${allResult.probability}%`}</div>
-          <div className={styles.resultInfo}>疑似患癌面积所占百分比：{allResult && allResult.probability && `${allResult.probability}%`}</div>
+          <div className={styles.resultInfo}>智能诊断结论：{conclusion ? conclusion.des:'暂无数据'}</div>
+          <div className={styles.resultInfo}>平均阳性概率：{allResult && allResult.probability ? `${allResult.probability}%`:'暂无数据'}</div>
+          <div className={styles.resultInfo}>疑似患癌区域个数：{allResult && allResult.cancerAreas_number ? `${allResult.cancerAreas_number}%`:'暂无数据'}</div>
+          <div className={styles.resultInfo}>疑似患癌面积所占百分比：{allResult && allResult.cancerAreas_percent ? `${allResult.cancerAreas_percent}%`:'暂无数据'}</div>
 
           <Table columns={columns}
                  dataSource={results}

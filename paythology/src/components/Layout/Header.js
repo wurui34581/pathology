@@ -33,8 +33,8 @@ export default class Header extends React.Component {
       render: (text, record) =>(
         <Progress percent={record.progress} />
       )
-    },{
-      title: '重试',
+    },/*{
+      title: '状态',
       key: 'action',
       render: (text, record, index) => (
         <span>
@@ -46,7 +46,7 @@ export default class Header extends React.Component {
       }
     </span>
       ),
-    }];
+    }*/];
   }
 
   handleClickMenu ( e ) {
@@ -65,9 +65,9 @@ export default class Header extends React.Component {
         files && files.length?
           Array.from(files).map((file)=>{
             let obj = {
-              name: file.name,
-              progress: 0,
-              state: 0,
+              name: file.webkitRelativePath,
+              //progress: 0,
+              //state: 0,
             };
             fileIndex.push(0);
             fileArr.push(obj)
@@ -78,7 +78,8 @@ export default class Header extends React.Component {
           uploadState: fileIndex
         });
         setTimeout(()=>{
-          this.startUpload(this.state.folder);
+          //this.startUpload(this.state.folder);
+          this.localUpload(this.state.fileList);
         })
       }
     });
@@ -105,6 +106,17 @@ export default class Header extends React.Component {
       visible: false,
     })
   };
+
+  localUpload ( folder ) {
+    const { localPicUrl } = this.props
+    localPicUrl(folder)
+    setTimeout(()=>{
+      this.setState({
+        visible: false,
+      })
+    },1200)
+
+  }
 
   startUpload( folder ) {
     let that = this;
@@ -225,7 +237,7 @@ export default class Header extends React.Component {
               <Icon type={classnames({ 'menu-unfold': siderFold, 'menu-fold': !siderFold })} />
             </div>
           <div className={styles.upload} onClick={this.showDrawer.bind(this)}>
-            <Icon type="folder-add" theme="outlined" style={{ fontSize: 16, paddingRight: 12   }} />
+            <Icon type="folder-add" theme="outlined" style={{ fontSize: 16, paddingRight: 12 }} />
             <span>影像导入</span>
           </div>
         </div>
@@ -258,7 +270,7 @@ export default class Header extends React.Component {
           visible={this.state.visible}
         >
           <div style={{ display: 'flex', justifyContent: 'center', fontSize: 18}}>
-            {
+            {/*
               fileList && fileList.length?
                 <div>
                   <Table columns={this.columns}
@@ -282,7 +294,12 @@ export default class Header extends React.Component {
                   <input type="file" style={{display: 'none'}} ref='customAttributes' multiple id="file-input"/>
                   <span>点击选择文件夹</span>
                 </div>
-            }
+            */}
+            <div onClick={this.upload.bind(this)}>
+              <Icon type="folder-add" theme="outlined" style={{ fontSize: 30, paddingRight: 12 }}/>
+              <input type="file" style={{display: 'none'}} ref='customAttributes' multiple id="file-input"/>
+              <span>点击选择文件夹</span>
+            </div>
           </div>
         </Drawer>
       </Layout.Header>

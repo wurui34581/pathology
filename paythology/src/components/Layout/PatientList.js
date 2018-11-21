@@ -21,7 +21,8 @@ class PatientList extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      hoverState: false
+      activeNum: 0,
+      hoverNum: 0
     }
   }
 
@@ -32,12 +33,14 @@ class PatientList extends React.Component {
   getPic(id, record, index) {
     const { getPic } = this.props;
     getPic( id, record )
-    this.setState({hoverState: true})
+    this.setState({
+      activeNum: index
+    })
   }
+
 
   render () {
     const { siderFold, darkTheme, changeTheme, patientList } = this.props;
-    const { hoverState } = this.state
     return (
       <div>
         <div className={styles.logo}>
@@ -50,11 +53,10 @@ class PatientList extends React.Component {
                    dataSource={patientList}
                    pagination={{size: 'small', defaultPageSize: 7}}
                    rowKey={(record, key) => key}
-                   rowClassName={classnames({[styles.tableRow]: hoverState})}
+                   rowClassName={(record, index)=>{return index === this.state.activeNum ? `${styles.tableRow}` : "";}}
                    onRow={(record, index) => {
                      return {
                        onClick: () => {this.getPic( record.dzi_path, record, index )},
-                       //onMouseEnter: () => { ()=>this.setState({hoverState: true}) }
                      };
                    }}/>: ''
         }

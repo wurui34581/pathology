@@ -7,7 +7,7 @@ import { routerRedux } from 'dva/router'
 import { parse } from 'qs'
 import config from 'config'
 import { EnumRoleType } from 'enums'
-import { query, logout, patientList, picUrl, result, allLabel } from 'services/app'
+import { query, logout, patientList, picUrl, result, allLabel, postPicUrl } from 'services/app'
 import queryString from 'query-string'
 
 const { prefix } = config
@@ -144,7 +144,6 @@ export default {
       if(data.success){
         //const pic = yield call(picUrl)
         //const pic = ['/public/1.1.jpg','/public/1.2.jpg','/public/1.3.jpg','/public/1.4.jpg']
-        console.log(data.list[0].result,'==========')
         yield put({ type: 'savePatient', payload: data.list })
         yield put({ type: 'getPic', payload: data.list[0].dzi_path })
         yield put({ type: 'getResults', payload: data.list[0].result })
@@ -154,7 +153,7 @@ export default {
       }
 
     },
-    * upLoadPatientList ({ payload }, { call, put }) {
+    * updatePatientList ({ payload }, { call, put }) {
 
       const data = yield call(patientList)
 
@@ -171,7 +170,13 @@ export default {
     * confirmResult({ payload }, { call, put }) {
       const data = yield call(allLabel, payload)
       if(data.success) {
-        yield put({type: 'upLoadPatientList'})
+        yield put({type: 'updatePatientList'})
+      }
+    },
+    * postPicUrl({ payload }, { call, put }) {
+      const data = yield call(postPicUrl, payload)
+      if(data.success) {
+        yield put({type: 'patientList'})
       }
     },
   },
