@@ -19,22 +19,39 @@ const { Header, styles } = MyLayout
 const { prefix, openPages } = config
 
 let lastHref
-
 class App extends React.Component{
   constructor(props){
     super(props)
+    this.state = {
+      patientNum: 0
+    }
   }
 
   componentDidMount () {
-    this.props.dispatch({ type:'app/patientList' })
+    this.props.dispatch({ type:'app/patientList'})
+  }
+  componentDidUpdate (preProps) {
+    const { app:{ patientList, loop, fileNum}, dispatch } = this.props
+    if(loop){
+      this.setState({
+        patientNum: patientList.length
+      })
+      this.props.dispatch({ type:'app/patientList'})
+      dispatch({ type: 'app/loop', payload:  false })
+    }
+    if(patientList.length - this.state.patientNum === fileNum ) {
+      clearInterval(this.timmer)
+    }
   }
 
   render () {
-    const { children, dispatch, app, loading, location, } = this.props;
+    const { children, dispatch, app, loading, location } = this.props;
 
     const {
-      user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions, patientList, results, allResult
+      user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, patientList, results, allResult, fileNum
     } = app
+    const { patientNum } = this.state;
+
 
     let { pathname } = location
     pathname = pathname.startsWith('/') ? pathname : `/${pathname}`
@@ -52,6 +69,9 @@ class App extends React.Component{
     }
 
     const headerProps = {
+      patientList,
+      patientNum,
+      fileNum,
       user,
       location,
       siderFold,
@@ -72,6 +92,9 @@ class App extends React.Component{
       },
       localPicUrl (folder) {
         dispatch({ type: 'app/postPicUrl', payload: { folder } })
+        dispatch({ type: 'app/loop', payload: true  })
+        dispatch({ type: 'app/fileNum', payload: folder.length  })
+
       },
     }
 
@@ -81,12 +104,15 @@ class App extends React.Component{
       siderFold,
       darkTheme,
       navOpenKeys,
-      getPic (id, record) {
-        dispatch({ type: 'app/getPic', payload: id })
-        dispatch({ type: 'app/getResults', payload: record.result })
-        dispatch({ type: 'app/getPicId', payload: record.id })
-        dispatch({ type: 'app/getAll', payload: record })
-        dispatch({ type: 'app/picState', payload: true })
+      getPic (record) {
+          dispatch({ type:'app/updatePatientList'})
+          dispatch({ type: 'app/getPic', payload: record.dzi_path })
+          dispatch({ type: 'app/getResults', payload: record.result })
+          dispatch({ type: 'app/getPicId', payload: record.id })
+          dispatch({ type: 'app/getAll', payload: record })
+          dispatch({ type: 'app/picState', payload: true })
+
+
       },
       changeTheme () {
         dispatch({ type: 'app/switchTheme' })

@@ -14,7 +14,7 @@ const columns = [{
   title: '状态',
   dataIndex: 'check',
   key: 'check',
-  render: (text) => <span>{text?'已审核':'未审核'}</span>
+  render: (text, record) => <span>{!record.dzi_path?'上传中':text?'已审核':'未审核'}</span>
 }];
 
 class PatientList extends React.Component {
@@ -30,9 +30,9 @@ class PatientList extends React.Component {
 
   }
 
-  getPic(id, record, index) {
+  getPic( record, index) {
     const { getPic } = this.props;
-    getPic( id, record )
+    getPic( record )
     this.setState({
       activeNum: index
     })
@@ -56,7 +56,7 @@ class PatientList extends React.Component {
                    rowClassName={(record, index)=>{return index === this.state.activeNum ? `${styles.tableRow}` : "";}}
                    onRow={(record, index) => {
                      return {
-                       onClick: () => {this.getPic( record.dzi_path, record, index )},
+                       onClick: () => {this.getPic( record, index )},
                      };
                    }}/>: ''
         }

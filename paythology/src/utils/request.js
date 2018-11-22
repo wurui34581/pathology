@@ -32,7 +32,7 @@ const fetch = (options) => {
     }
     url = domain + url
   } catch (e) {
-    message.error(e.message)
+    //message.error(e.message)
   }
 
   if (fetchType === 'JSONP') {

@@ -9107,7 +9107,7 @@ window.OpenSeadragon = window.OpenSeadragon || function(a) { return new OpenSead
           var $TileSource = $.TileSource.determineType(_this, tileSource);
           if (!$TileSource) {
             failCallback({
-              message: 'Unable to load TileSource',
+              message: '无病理图数据',
               source: tileSource
             });
             return;
@@ -10742,7 +10742,7 @@ window.OpenSeadragon = window.OpenSeadragon || function(a) { return new OpenSead
       Security: 'It looks like a security restriction stopped us from ' +
       'loading this Deep Zoom Image.',
       Status: 'This space unintentionally left blank ({0} {1}).',
-      OpenFailed: 'Unable to open {0}: {1}'
+      OpenFailed: '无法打开病理图'
     },
 
     Tooltips: {

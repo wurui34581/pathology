@@ -29,13 +29,13 @@ class Image extends React.Component{
 
   componentDidUpdate ( prevProps ) {
     const { app: { picUrl, results, labelState, picState, labelIndex }, dispatch } = this.props;
-    if ( picUrl && picState && results.length ) {
+    if ( picUrl && picState  ) {
       this.viewer && this.viewer.destroy()
       this.openSeadragonInfo()
 
       dispatch({ type: 'app/picState', payload: false })
     }
-    if( labelState === !prevProps.labelState ){
+    if( labelState === !prevProps.labelState && results && results.length ){
       this.viewer.viewport.panTo(new OpenSeadragon.Point(results[labelIndex].area_center.x/100,results[labelIndex].area_center.y/100), true)
         .zoomTo(3);
     }
@@ -43,50 +43,51 @@ class Image extends React.Component{
 
   openSeadragonInfo() {
     const { app:{ picUrl, results } } = this.props;
-
-    this.viewer = OpenSeadragon({
-      id: "openseadragon1",
-      prefixUrl: "/public/data/open/images/",
-      tileSources: `${APIV2}${picUrl}`,
-      showNavigator: true,
-      navigatorPosition: 'BOTTOM_RIGHT',
-      zoomInButton: 'zoom-in',
-      zoomOutButton: 'zoom-out',
-      fullPageButton: 'full-page',
-      nextButton: 'next',
-      previousButton: 'previous',
-      //navigatorId: 'miniMap',
-      navigatorWidth: 150,
-      navigatorHeight: 150,
-      isibilityRatio: 0.4,
-      minZoomLevel: 0.9,
-      maxZoomLevel: 40,
-      zoomPerClick: 4,
-      constrainDuringPan: true,
-      panVertical: true,
-      showSequenceControl:true,
-    })
-    let viewer = this.viewer;
-    this.annotations = new OpenSeadragon.Annotations({ viewer })
-    let loc = []
-    results && results.length?
-      results.map((item)=>{
-        let anno = [
-          'path',
-          {
-            d:item.annotation,
-            'fill': "none",
-            'stroke': "blue",
-            'stroke-linecap': "round",
-            'stroke-linejoin': "round",
-            'stroke-width': "2",
-            'vector-effect': "non-scaling-stroke",
-          }
-        ]
-        loc.push(anno)
-      }):null
-    this.annotations.model.annotations = loc;
-    this.annotations.setAnnotations(loc)
+    if(picUrl){
+      this.viewer = OpenSeadragon({
+        id: "openseadragon1",
+        //prefixUrl: "/public/data/open/images/",
+        tileSources: `${APIV2}${picUrl}`,
+        showNavigator: true,
+        navigatorPosition: 'BOTTOM_RIGHT',
+        zoomInButton: 'zoom-in',
+        zoomOutButton: 'zoom-out',
+        fullPageButton: 'full-page',
+        nextButton: 'next',
+        previousButton: 'previous',
+        //navigatorId: 'miniMap',
+        navigatorWidth: 150,
+        navigatorHeight: 150,
+        isibilityRatio: 0.4,
+        minZoomLevel: 0.9,
+        maxZoomLevel: 40,
+        zoomPerClick: 4,
+        constrainDuringPan: true,
+        panVertical: true,
+        showSequenceControl:true,
+      })
+      let viewer = this.viewer;
+      this.annotations = new OpenSeadragon.Annotations({ viewer })
+      let loc = []
+      results && results.length?
+        results.map((item)=>{
+          let anno = [
+            'path',
+            {
+              d:item.annotation,
+              'fill': "none",
+              'stroke': "blue",
+              'stroke-linecap': "round",
+              'stroke-linejoin': "round",
+              'stroke-width': "2",
+              'vector-effect': "non-scaling-stroke",
+            }
+          ]
+          loc.push(anno)
+        }):null
+      this.annotations.model.annotations = loc;
+      this.annotations.setAnnotations(loc)
+    }
   }
 
   /*optionPic ( type, index ) {

@@ -74,10 +74,9 @@ npm run start
 作用：获取患者（文件）列表以及相应的算法数据
 Response:
 {
-  id: 'patientId',   //患者（文件）ID
-  name: 'fileName',  //文件名
+  id: 'patientId',                 //患者（文件）ID
+  name: 'fileName',                //文件名
   dzi_path: '/dzi_path/123.dzi',   //dzi文件地址
-  
 }
 
 

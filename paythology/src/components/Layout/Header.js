@@ -108,14 +108,14 @@ export default class Header extends React.Component {
   };
 
   localUpload ( folder ) {
-    const { localPicUrl } = this.props
+    const { localPicUrl, dispatch } = this.props
     localPicUrl(folder)
+
     setTimeout(()=>{
       this.setState({
         visible: false,
       })
     },1200)
-
   }
 
   startUpload( folder ) {
@@ -224,7 +224,11 @@ export default class Header extends React.Component {
   render() {
     const {user,
       switchSider,
-      siderFold, } = this.props;
+      siderFold,
+      fileNum,
+      patientNum,
+      patientList
+    } = this.props;
     const { fileList } = this.state;
 
     return(
@@ -253,9 +257,9 @@ export default class Header extends React.Component {
                 {user.username}
             </span>}
             >
-              <Menu.Item key="logout">
+              {/*<Menu.Item key="logout">
                 退出登录
-              </Menu.Item>
+              </Menu.Item>*/}
             </SubMenu>
           </Menu>
 
@@ -270,6 +274,21 @@ export default class Header extends React.Component {
           visible={this.state.visible}
         >
           <div style={{ display: 'flex', justifyContent: 'center', fontSize: 18}}>
+            {
+              fileList && fileList.length?
+                patientList && patientList.length && patientList[patientList.length-1].dzi_path?
+                  <div onClick={this.upload.bind(this)}>
+                  <Icon type="folder-add" theme="outlined" style={{ fontSize: 30, paddingRight: 12 }}/>
+                  <input type="file" style={{display: 'none'}} ref='customAttributes' multiple id="file-input"/>
+                  <span>点击选择文件夹</span>
+                </div>:
+                  <div>上传中...</div>:
+                <div onClick={this.upload.bind(this)}>
+                  <Icon type="folder-add" theme="outlined" style={{ fontSize: 30, paddingRight: 12 }}/>
+                  <input type="file" style={{display: 'none'}} ref='customAttributes' multiple id="file-input"/>
+                  <span>点击选择文件夹</span>
+                </div>
+            }
             {/*
               fileList && fileList.length?
                 <div>
@@ -295,11 +314,7 @@ export default class Header extends React.Component {
                   <span>点击选择文件夹</span>
                 </div>
             */}
-            <div onClick={this.upload.bind(this)}>
-              <Icon type="folder-add" theme="outlined" style={{ fontSize: 30, paddingRight: 12 }}/>
-              <input type="file" style={{display: 'none'}} ref='customAttributes' multiple id="file-input"/>
-              <span>点击选择文件夹</span>
-            </div>
+
           </div>
         </Drawer>
       </Layout.Header>

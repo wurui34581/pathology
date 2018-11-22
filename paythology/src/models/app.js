@@ -15,7 +15,7 @@ const { prefix } = config
 export default {
   namespace: 'app',
   state: {
-    user: {},
+    user: {username:'admin',password: 'admin',permissions: {role:'admin'}},
     permissions: {
       visit: [],
     },
@@ -26,7 +26,9 @@ export default {
     allResult:null,
     picId: '',
     picState: true,
+    fileNum: 0,
     curLabel: null,
+    loop: false,
     labelIndex: 0,
     menuPopoverVisible: false,
     siderFold: window.localStorage.getItem(`${prefix}siderFold`) === 'true',
@@ -67,7 +69,9 @@ export default {
     * query ({
       payload,
     }, { call, put, select }) {
-      const { success, user } = yield call(query, payload)
+      //const { success, user } = yield call(query, payload)
+      console.log(user,'----------')
+      const { success, user } = {success: false, user:{username:'admin',password: 'admin',permissions: {role:'admin'}}}
       const { locationPathname } = yield select(_ => _.app)
       if (success && user) {
         /*const { list } = yield call(menusService.query)
@@ -93,6 +97,9 @@ export default {
             //menu,
           },
         })
+        yield put(routerRedux.push({
+          pathname: '/image',
+        }))
         if (location.pathname === '/login') {
           yield put(routerRedux.push({
             pathname: '/image',
@@ -111,7 +118,13 @@ export default {
     * logout ({
       payload,
     }, { call, put }) {
-      const data = yield call(logout, parse(payload))
+      //const data = yield call(logout, parse(payload))
+      const data = {
+        message: "Ok",
+        statusCode: 200,
+        success: true,
+      }
+
       if (data.success) {
         yield put({ type: 'updateState', payload: {
           user: {},
@@ -145,11 +158,12 @@ export default {
         //const pic = yield call(picUrl)
         //const pic = ['/public/1.1.jpg','/public/1.2.jpg','/public/1.3.jpg','/public/1.4.jpg']
         yield put({ type: 'savePatient', payload: data.list })
-        yield put({ type: 'getPic', payload: data.list[0].dzi_path })
-        yield put({ type: 'getResults', payload: data.list[0].result })
-        yield put({ type: 'getPicId', payload: data.list[0].id })
-        yield put({ type: 'getAll', payload: data.list[0] })
-
+        if(data.list.length){
+          yield put({ type: 'getPic', payload: data.list[0].dzi_path })
+          yield put({ type: 'getResults', payload: data.list[0].result })
+          yield put({ type: 'getPicId', payload: data.list[0].id })
+          yield put({ type: 'getAll', payload: data.list[0] })
+        }
       }
 
     },
@@ -224,6 +238,18 @@ export default {
       return {
         ...state,
         picState: payload
+      }
+    },
+    loop(state, { payload }){
+      return {
+        ...state,
+        loop: payload
+      }
+    },
+    fileNum(state, { payload }){
+      return {
+        ...state,
+        fileNum: payload
       }
     },
 

@@ -16,6 +16,7 @@ const columns = [{
   title: '面积',
   dataIndex: 'area',
   key: 'area',
+  render: (text) => <span>{text.toFixed(2)}%</span>
 }, {
   title: '结论',
   dataIndex: 'conclusion',
@@ -24,28 +25,19 @@ const columns = [{
     let conclusion = conclusionDes.find((c)=>{return c.data === text})
     return (<span>{conclusion.des}</span>)
   }
-},{
+},/*{
   title: '概率',
   dataIndex: 'probability',
   key: 'probability',
   render: (text)=><span>{text}%</span>
-},];
+},*/];
 
 const conclusionDes = [{
   data: 'normal',
   des: '正常'
 },{
-  data: 'benign',
-  des: '良性病变'
-},{
-  data: 'dcis',
-  des: '原位癌'
-},{
-  data: 'nst',
-  des: '浸润性癌'
-},{
-  data: 'unknown',
-  des: '未知'
+  data: 'abnormal',
+  des: '异常'
 }]
 
 class Result extends React.Component {
@@ -73,15 +65,15 @@ class Result extends React.Component {
     return (
       <div className={styles.resultWrapper}>
         <Tabs type="card">
-          <TabPane tab="ROI" key="1"><img src={`${APIV2}${allResult && allResult.roi_path}`} alt="" style={{width: '60%',marginLeft: '20%'}}/></TabPane>
-          <TabPane tab="Heatmap" key="2"><img src={`${APIV2}${allResult && allResult.heatmap_path}`} alt="" style={{width: '60%', marginLeft: '20%'}}/></TabPane>
+          <TabPane tab="ROI" key="1"><img src={`${APIV2}${allResult && allResult.roi_path}`} alt="" style={{width: '50%',marginLeft: '25%'}}/></TabPane>
+          <TabPane tab="Heatmap" key="2"><img src={`${APIV2}${allResult && allResult.heatmap_path}`} alt="" style={{width: '50%', marginLeft: '25%'}}/></TabPane>
         </Tabs>
         <div>
           <div className={styles.resultTitle}>智能诊断结果</div>
           <div className={styles.resultInfo}>智能诊断结论：{conclusion ? conclusion.des:'暂无数据'}</div>
-          <div className={styles.resultInfo}>平均阳性概率：{allResult && allResult.probability ? `${allResult.probability}%`:'暂无数据'}</div>
-          <div className={styles.resultInfo}>疑似患癌区域个数：{allResult && allResult.cancerAreas_number ? `${allResult.cancerAreas_number}%`:'暂无数据'}</div>
-          <div className={styles.resultInfo}>疑似患癌面积所占百分比：{allResult && allResult.cancerAreas_percent ? `${allResult.cancerAreas_percent}%`:'暂无数据'}</div>
+          <div className={styles.resultInfo}>平均阳性概率：{allResult && allResult.probability ? `${allResult.probability.toFixed(2)}%`:'暂无数据'}</div>
+          <div className={styles.resultInfo}>疑似患癌区域个数：{allResult && allResult.cancerAreas_number ? `${allResult.cancerAreas_number}`:'暂无数据'}</div>
+          <div className={styles.resultInfo}>疑似患癌面积所占百分比：{allResult && allResult.cancerAreas_percent ? `${allResult.cancerAreas_percent.toFixed(2)}%`:'暂无数据'}</div>
 
           <Table columns={columns}
                  dataSource={results}
