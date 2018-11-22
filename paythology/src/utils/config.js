@@ -1,5 +1,6 @@
 const APIV1 = '/api/v1'
-const APIV2 = 'http://192.168.10.178:8080'
+//const APIV2 = 'http://192.168.10.178:8080'
+const APIV2 = '/api/v2'
 
 module.exports = {
   name: '病理智能辅助诊断平台',
