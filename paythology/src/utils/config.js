@@ -1,6 +1,6 @@
 const APIV1 = '/api/v1'
-const APIV2 = 'http://localhost:8080'
-//const APIV2 = 'http://192.168.10.173:8080'
+//const APIV2 = 'http://localhost:8080'
+const APIV2 = 'http://192.168.10.173:8080'
 
 module.exports = {
   name: '病理智能辅助诊断平台',
@@ -9,7 +9,7 @@ module.exports = {
   logo: 'public/logo.png',
   iconFontCSS: 'public/iconfont.css',
   iconFontJS: 'public/iconfont.js',
-  CORS: ['http://localhost:8080'],
+  CORS: ['http://192.168.10.173:8080'],
   openPages: ['/login'],
   apiPrefix: '/api/v1',
   APIV1,

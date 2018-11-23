@@ -153,6 +153,7 @@ export default {
     * patientList ({ payload }, { call, put }) {
 
       const data = yield call(patientList)
+      console.log(data,'-------')
 
       if(data.success){
         //const pic = yield call(picUrl)
