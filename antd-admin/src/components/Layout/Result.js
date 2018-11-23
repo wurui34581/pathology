@@ -8,28 +8,7 @@ const TabPane = Tabs.TabPane;
 const APIV2 = config.APIV2
 
 
-const columns = [{
-  title: '编号',
-  dataIndex: 'area_id',
-  key: 'area_id',
-}, {
-  title: '面积',
-  dataIndex: 'area',
-  key: 'area',
-}, {
-  title: '结论',
-  dataIndex: 'conclusion',
-  key: 'conclusion',
-  render: (text)=>{
-    let conclusion = conclusionDes.find((c)=>{return c.data === text})
-    return (<span>{conclusion.des}</span>)
-  }
-},{
-  title: '概率',
-  dataIndex: 'probability',
-  key: 'probability',
-  render: (text)=><span>{text}%</span>
-},];
+
 
 const conclusionDes = [{
   data: 'normal',
@@ -54,7 +33,26 @@ class Result extends React.Component {
   }
 
   componentDidMount () {
-
+    this.columns = [{
+      title: '编号',
+      dataIndex: 'anno_id',
+      key: 'anno_id',
+      render: (text)=><span>{text+1}</span>,
+    }, {
+      title: '结论',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text)=>{
+        let conclusion = conclusionDes.find((c)=>{return c.data === text})
+        return (<span>{conclusion.des}</span>)
+      },
+    }, {
+      title: '操作',
+      key: 'action',
+      render: (text, record, index) => (
+        <span onClick={this.deleteLabel.bind(this, index)} className={styles.actionStyle}>删除</span>
+      ),
+    },];
   }
 
   labelInfo ( record, index ) {
@@ -66,9 +64,17 @@ class Result extends React.Component {
     const { confirmResult } = this.props;
     confirmResult( type )
   }
+  addLabel(){
+    const { addLabel } = this.props;
+    addLabel()
+  }
+  deleteLabel(index){
+    const { deleteLabel } = this.props
+    deleteLabel(index)
+  }
 
   render () {
-    const { results, allResult } = this.props;
+    const { results, allResult, labelsList } = this.props;
     let conclusion = allResult && conclusionDes.find((c)=>{ return c.data === allResult.conclusion })
     return (
       <div className={styles.resultWrapper}>
@@ -94,6 +100,21 @@ class Result extends React.Component {
                    };
                  }}/>
         </div>*/}
+        <div>
+          <div className={styles.resultTitle}>医师标记</div>
+          <Table columns={this.columns}
+                 dataSource={labelsList}
+                 size="small"
+                 pagination={{size: 'small', defaultPageSize: 5}}
+                 rowKey={(record, key) => key}
+                 onRow={(record,index) => {
+                   return {
+                     //onClick: () => {this.labelInfo( record, index )},
+                   };
+                 }}/>
+          <Button type="dashed" block onClick={this.addLabel.bind(this)}>+</Button>
+        </div>
+
 
         <div>
           <div className={styles.resultTitle}>医师确认结果</div>
@@ -110,7 +131,6 @@ class Result extends React.Component {
           </div>
         </div>
       </div>
-
     )
   }
 }

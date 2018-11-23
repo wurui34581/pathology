@@ -33,7 +33,7 @@ class App extends React.Component{
     const { children, dispatch, app, loading, location, } = this.props;
 
     const {
-      user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, menu, permissions, patientList, results, allResult
+      user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, patientList, results, allResult, labelsList
     } = app
 
     let { pathname } = location
@@ -95,6 +95,7 @@ class App extends React.Component{
     }
 
     const resultProps = {
+      labelsList,
       results,
       allResult,
       labelInfo ( label, index ) {
@@ -102,6 +103,12 @@ class App extends React.Component{
       },
       confirmResult ( type ) {
         dispatch({ type: 'app/confirmResult', payload: { type, id: allResult.id } })
+      },
+      addLabel() {
+        dispatch({ type: 'app/addLabel', payload: true })
+      },
+      deleteLabel(index) {
+        dispatch({ type: 'app/deleteLabel', payload: {index, deleteState: true} })
       }
     }
 

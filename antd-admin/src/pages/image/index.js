@@ -24,45 +24,15 @@ class Image extends React.Component{
   }
 
   componentDidMount () {
-    const { app:{ picUrl, allResult }, dispatch } = this.props;
-    /*if(!this.viewer.areAnnotationsActive()){
-      this.viewer.initializeAnnotations();
-    }*/
-    //oanno(this.viewer)
-    //console.log(oanno(this.viewer),'---viewer----')
-
+    this.openSeadragonInfo()
   }
 
   componentDidUpdate ( prevProps ) {
-    const { app: { picUrl, results, curLabel, labelState, picState, labelIndex }, dispatch } = this.props;
-    if ( picUrl && picState && results.length ) {
-      console.log(results,'-----')
+    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList }, dispatch } = this.props;
+    if ( picUrl && picState ) {
       this.viewer && this.viewer.destroy()
-      this.viewer = OpenSeadragon({
-        id: "openseadragon1",
-        prefixUrl: "/public/data/open/images/",
-        tileSources: `${APIV2}${picUrl}`,
-        showNavigator: true,
-        navigatorPosition: 'BOTTOM_RIGHT',
-        zoomInButton: 'zoom-in',
-        zoomOutButton: 'zoom-out',
-        fullPageButton: 'full-page',
-        nextButton: 'next',
-        previousButton: 'previous',
-        //navigatorId: 'miniMap',
-        navigatorWidth: 150,
-        navigatorHeight: 150,
-        isibilityRatio: 0.4,
-        minZoomLevel: 0.9,
-        maxZoomLevel: 40,
-        zoomPerClick: 4,
-        constrainDuringPan: true,
-        panVertical: true,
-        showSequenceControl:true,
-      })
-      let viewer = this.viewer;
-      this.annotations = new OpenSeadragon.Annotations({ viewer })
-      /*let loc = []
+      this.openSeadragonInfo()
+      let loc = []
       results && results.length?
         results.map((item,index)=>{
           let anno = [
@@ -80,7 +50,7 @@ class Image extends React.Component{
           loc.push(anno)
         }):null
       this.annotations.model.annotations = loc;
-      this.annotations.setAnnotations(loc)*/
+      this.annotations.setAnnotations(loc)
 
       dispatch({ type: 'app/picState', payload: false })
     }
@@ -88,6 +58,60 @@ class Image extends React.Component{
       this.viewer.viewport.panTo(new OpenSeadragon.Point(results[labelIndex].area_center.x/100,results[labelIndex].area_center.y/100), true)
         .zoomTo(3);
     }
+
+    if (addLabelState) {
+      let annotations = this.annotations.model.annotations;
+      let annoMark = this.annotations.model.showSelect;
+      let postData = []
+      annotations && annotations.length?
+        annotations.map((anno, index)=>{
+          if(index%2){
+            let annoInfo = {type:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1 }
+            postData.push(annoInfo)
+          }
+
+        }) : null
+      dispatch({type: 'app/labelsList', payload: postData})
+      dispatch({type: 'app/addLabel', payload: false})
+    }
+
+    if(deleteState){
+      labelsList.splice(deleteLabelIndex, 1)
+      let annoIndex = (deleteLabelIndex+1) * 2 - 1
+      this.annotations.model.annotations.splice(annoIndex-1,2)
+      dispatch({ type: 'app/labelsList', payload: labelsList })
+      dispatch({ type: 'app/deleteLabel', payload: {deleteState: false} })
+    }
+  }
+
+  openSeadragonInfo(){
+    const { app: { picUrl } } = this.props;
+
+
+    this.viewer = OpenSeadragon({
+      id: "openseadragon1",
+      prefixUrl: "/public/data/open/images/",
+      tileSources: `${APIV2}${picUrl}`,
+      showNavigator: true,
+      navigatorPosition: 'BOTTOM_RIGHT',
+      zoomInButton: 'zoom-in',
+      zoomOutButton: 'zoom-out',
+      fullPageButton: 'full-page',
+      nextButton: 'next',
+      previousButton: 'previous',
+      //navigatorId: 'miniMap',
+      navigatorWidth: 150,
+      navigatorHeight: 150,
+      isibilityRatio: 0.4,
+      minZoomLevel: 0.9,
+      maxZoomLevel: 40,
+      zoomPerClick: 4,
+      constrainDuringPan: true,
+      panVertical: true,
+      showSequenceControl:true,
+    })
+    let viewer = this.viewer;
+    this.annotations = new OpenSeadragon.Annotations({ viewer })
   }
 
   optionPic ( type, index ) {
@@ -110,7 +134,6 @@ class Image extends React.Component{
           this.refs.carousel.innerSlider.slickGoTo(picUrl.length);
           break;
         case 'edit':
-
           let loc = [['path',{
             d: "M41.94 91.89",
             fill: "none",

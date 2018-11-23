@@ -27,7 +27,11 @@ export default {
     picId: '',
     picState: true,
     curLabel: null,
+    addLabelState: false,
+    labelsList: [],
+    deleteState: false,
     labelIndex: 0,
+    deleteLabelIndex: 0,
     menuPopoverVisible: false,
     siderFold: window.localStorage.getItem(`${prefix}siderFold`) === 'true',
     darkTheme: window.localStorage.getItem(`${prefix}darkTheme`) === 'true',
@@ -144,7 +148,6 @@ export default {
       if(data.success){
         //const pic = yield call(picUrl)
         //const pic = ['/public/1.1.jpg','/public/1.2.jpg','/public/1.3.jpg','/public/1.4.jpg']
-        console.log(data.list[0].result,'==========')
         yield put({ type: 'savePatient', payload: data.list })
         yield put({ type: 'getPic', payload: data.list[0].dzi_path })
         yield put({ type: 'getResults', payload: data.list[0].result })
@@ -219,6 +222,27 @@ export default {
       return {
         ...state,
         picState: payload
+      }
+    },
+
+    addLabel(state, { payload }){
+      return {
+        ...state,
+        addLabelState: payload
+      }
+    },
+
+    labelsList(state, { payload }) {
+      return {
+        ...state,
+        labelsList: payload
+      }
+    },
+    deleteLabel(state, { payload }){
+      return {
+        ...state,
+        deleteLabelIndex: payload.index,
+        deleteState: payload.deleteState
       }
     },
 

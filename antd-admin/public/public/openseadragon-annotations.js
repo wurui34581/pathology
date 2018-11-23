@@ -1751,7 +1751,7 @@ var reactToGeneralAction = function reactToGeneralAction(model) {
             selectedValue = e.target.value
           }
           submitLabel.onclick = (e)=>{
-            selectedValue = selectedValue? selectedValue:'0'
+            selectedValue = selectedValue? selectedValue:'normal'
             console.log(selectedValue,'3333')
             model.showSelect.push(selectedValue)
             let lastChild = root.childNodes[1] && root.childNodes[1];
