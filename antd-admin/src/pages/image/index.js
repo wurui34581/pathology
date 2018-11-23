@@ -24,33 +24,41 @@ class Image extends React.Component{
   }
 
   componentDidMount () {
+    const { dispatch } = this.props;
     this.openSeadragonInfo()
+    let annotations = this.annotations.model.annotations;
+    let annoMark = this.annotations.model.showSelect;
+    let postData = []
+    annotations && annotations.length?
+      annotations.map((anno, index)=>{
+        if(index%2){
+          let annoInfo = {type:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1 }
+          postData.push(annoInfo)
+        }
+
+      }) : null
+    dispatch({type: 'app/labelsList', payload: postData})
   }
 
   componentDidUpdate ( prevProps ) {
-    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList }, dispatch } = this.props;
+    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList, patientIndex }, dispatch } = this.props;
     if ( picUrl && picState ) {
       this.viewer && this.viewer.destroy()
       this.openSeadragonInfo()
-      let loc = []
-      results && results.length?
-        results.map((item,index)=>{
-          let anno = [
-            'path',
-            {
-              d:item.annotation,
-              'fill': "none",
-              'stroke': "blue",
-              'stroke-linecap': "round",
-              'stroke-linejoin': "round",
-              'stroke-width': "2",
-              'vector-effect': "non-scaling-stroke",
-            }
-          ]
-          loc.push(anno)
-        }):null
-      this.annotations.model.annotations = loc;
-      this.annotations.setAnnotations(loc)
+      let annotations = this.annotations.model.annotations;
+      //let annoMark = this.annotations.model.showSelect;
+     /* let postData = []
+      postData[patientIndex] = []
+      annotations && annotations.length?
+        annotations.map((anno, index)=>{
+          if(index%2){
+            let annoInfo = {type:"unknown", anno_id: (index+1)/2-1 }
+            postData[patientIndex].push(annoInfo)
+          }
+
+        }) : null
+      dispatch({type: 'app/labelsList', payload: postData})
+      dispatch({type: 'app/addLabel', payload: false})*/
 
       dispatch({ type: 'app/picState', payload: false })
     }
@@ -63,11 +71,13 @@ class Image extends React.Component{
       let annotations = this.annotations.model.annotations;
       let annoMark = this.annotations.model.showSelect;
       let postData = []
+      postData[patientIndex] = []
+      console.log(annotations,'===anno====')
       annotations && annotations.length?
         annotations.map((anno, index)=>{
           if(index%2){
             let annoInfo = {type:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1 }
-            postData.push(annoInfo)
+            postData[patientIndex].push(annoInfo)
           }
 
         }) : null
@@ -76,7 +86,9 @@ class Image extends React.Component{
     }
 
     if(deleteState){
-      labelsList.splice(deleteLabelIndex, 1)
+      console.log(deleteLabelIndex,'555555')
+      labelsList[patientIndex].splice(deleteLabelIndex, 1)
+      console.log(labelsList,'-----9999')
       let annoIndex = (deleteLabelIndex+1) * 2 - 1
       this.annotations.model.annotations.splice(annoIndex-1,2)
       dispatch({ type: 'app/labelsList', payload: labelsList })
@@ -85,8 +97,7 @@ class Image extends React.Component{
   }
 
   openSeadragonInfo(){
-    const { app: { picUrl } } = this.props;
-
+    const { app: { picUrl, results } } = this.props;
 
     this.viewer = OpenSeadragon({
       id: "openseadragon1",
@@ -112,6 +123,26 @@ class Image extends React.Component{
     })
     let viewer = this.viewer;
     this.annotations = new OpenSeadragon.Annotations({ viewer })
+
+    let loc = []
+    results && results.length?
+      results.map((item,index)=>{
+        let anno = [
+          'path',
+          {
+            d:item.annotation,
+            'fill': "none",
+            'stroke': "blue",
+            'stroke-linecap': "round",
+            'stroke-linejoin': "round",
+            'stroke-width': "2",
+            'vector-effect': "non-scaling-stroke",
+          }
+        ]
+        loc.push(anno)
+      }):null
+    this.annotations.model.annotations = loc;
+    this.annotations.setAnnotations(loc)
   }
 
   optionPic ( type, index ) {

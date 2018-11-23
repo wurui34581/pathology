@@ -28,6 +28,7 @@ export default {
     picState: true,
     curLabel: null,
     addLabelState: false,
+    patientIndex: 0,
     labelsList: [],
     deleteState: false,
     labelIndex: 0,
@@ -243,6 +244,12 @@ export default {
         ...state,
         deleteLabelIndex: payload.index,
         deleteState: payload.deleteState
+      }
+    },
+    patientIndex(state, { payload }) {
+      return {
+        ...state,
+        patientIndex: payload,
       }
     },
 

@@ -31,7 +31,7 @@ class PatientList extends React.Component {
 
   getPic(id, record, index) {
     const { getPic } = this.props;
-    getPic( id, record )
+    getPic( id, record, index )
     this.setState({hoverState: true})
   }
 

@@ -33,7 +33,7 @@ class App extends React.Component{
     const { children, dispatch, app, loading, location, } = this.props;
 
     const {
-      user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, patientList, results, allResult, labelsList
+      user, siderFold, darkTheme, isNavbar, menuPopoverVisible, navOpenKeys, patientList, results, allResult, labelsList, patientIndex
     } = app
 
     let { pathname } = location
@@ -78,12 +78,14 @@ class App extends React.Component{
       siderFold,
       darkTheme,
       navOpenKeys,
-      getPic (id, record) {
+      getPic (id, record, index) {
+        console.log(index,'6666')
         dispatch({ type: 'app/getPic', payload: id })
         dispatch({ type: 'app/getResults', payload: record.result })
         dispatch({ type: 'app/getPicId', payload: record.id })
         dispatch({ type: 'app/getAll', payload: record })
         dispatch({ type: 'app/picState', payload: true })
+        dispatch({ type: 'app/patientIndex', payload: index })
       },
       changeTheme () {
         dispatch({ type: 'app/switchTheme' })
@@ -95,6 +97,7 @@ class App extends React.Component{
     }
 
     const resultProps = {
+      patientIndex,
       labelsList,
       results,
       allResult,

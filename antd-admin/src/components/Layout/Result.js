@@ -44,7 +44,7 @@ class Result extends React.Component {
       key: 'type',
       render: (text)=>{
         let conclusion = conclusionDes.find((c)=>{return c.data === text})
-        return (<span>{conclusion.des}</span>)
+        return (<span>{conclusion && conclusion.des}</span>)
       },
     }, {
       title: '操作',
@@ -74,7 +74,7 @@ class Result extends React.Component {
   }
 
   render () {
-    const { results, allResult, labelsList } = this.props;
+    const { results, allResult, labelsList, patientIndex } = this.props;
     let conclusion = allResult && conclusionDes.find((c)=>{ return c.data === allResult.conclusion })
     return (
       <div className={styles.resultWrapper}>
@@ -101,9 +101,11 @@ class Result extends React.Component {
                  }}/>
         </div>*/}
         <div>
+          <div className={styles.resultTitle}>智能诊断结果</div>
+          <div style={{textAlign: 'center',paddingBottom: 20}}>暂无数据</div>
           <div className={styles.resultTitle}>医师标记</div>
           <Table columns={this.columns}
-                 dataSource={labelsList}
+                 dataSource={labelsList[patientIndex]}
                  size="small"
                  pagination={{size: 'small', defaultPageSize: 5}}
                  rowKey={(record, key) => key}
@@ -112,21 +114,20 @@ class Result extends React.Component {
                      //onClick: () => {this.labelInfo( record, index )},
                    };
                  }}/>
-          <Button type="dashed" block onClick={this.addLabel.bind(this)}>+</Button>
+          <Button type="primary" block onClick={this.addLabel.bind(this)}>标注完成后点此添加</Button>
         </div>
 
 
         <div>
           <div className={styles.resultTitle}>医师确认结果</div>
           <div className={styles.buttonGroup}>
-            <Button type="primary" block onClick={this.confirmResult.bind(this, 'normal')}>正常</Button>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              <Button type="primary" ghost onClick={this.confirmResult.bind(this, 'benign')} style={{width: 120}}>良性病变</Button>
-              <Button type="danger" onClick={this.confirmResult.bind(this, 'dcis')} style={{width: 120}}>原位癌</Button>
+              <Button type="primary" onClick={this.confirmResult.bind(this, 'normal')} style={{width: 120}}>正常</Button>
+              <Button type="danger" onClick={this.confirmResult.bind(this, 'dcis')} style={{width: 120}}>肝炎</Button>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              <Button type="default" onClick={this.confirmResult.bind(this, 'nst')} style={{width: 120}}>浸润性癌</Button>
-              <Button type="dashed" onClick={this.confirmResult.bind(this, 'unknown')} style={{width: 120}}>未知</Button>
+              <Button type="default" onClick={this.confirmResult.bind(this, 'nst')} style={{width: 120}}>肝癌</Button>
+              <Button type="dashed" onClick={this.confirmResult.bind(this, 'unknown')} style={{width: 120}}>其他</Button>
             </div>
           </div>
         </div>
