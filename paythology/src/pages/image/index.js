@@ -47,7 +47,7 @@ class Image extends React.Component{
     this.viewer = OpenSeadragon({
       id: "openseadragon1",
       prefixUrl: "/public/data/open/images/",
-      tileSources: `${APIV2}${picUrl}`,
+      tileSources: '/public/tall.dzi',
       showNavigator: true,
       navigatorPosition: 'BOTTOM_RIGHT',
       zoomInButton: 'zoom-in',
@@ -89,50 +89,24 @@ class Image extends React.Component{
     this.annotations.setAnnotations(loc)
   }
 
-  /*optionPic ( type, index ) {
+  optionPic ( type, index ) {
     const { curPage } = this.state;
     const { dispatch } = this.props;
     //const { app:{ picUrl } } = this.props;
     const picUrl = ['/public/1.1.jpg','/public/1.2.jpg'];
     if (picUrl && picUrl.length ){
       switch ( type ) {
-        case 'caret-left':
-          this.refs.carousel.innerSlider.slickPrev();
-          break;
-        case 'caret-right':
-          this.refs.carousel.innerSlider.slickNext();
-          break;
-        case 'step-backward':
-          this.refs.carousel.innerSlider.slickGoTo(0);
-          break;
-        case 'step-forward':
-          this.refs.carousel.innerSlider.slickGoTo(picUrl.length);
-          break;
         case 'edit':
-
-          let loc = [['path',{
-            d: "M41.94 91.89",
-            fill: "none",
-            stroke: "red",
-            strokeLinecap: "round",
-            strokeLinejoin: "round",
-            strokeWidth: 2,
-            vectorEffect: "non-scaling-stroke",
-          }],['path',{
-            d: "M41.94 91.89 L40.43 92.57 L39.09 93.07 L37.92 93.74 L37.58 94.08 L37.58 94.58 L37.25 95.25 L37.25 95.59 L37.25 95.92 L37.25 96.43 L37.25 96.76 L53.86 92.57 L51.85 90.72 L49.83 89.71 L48.32 89.04 L46.81 88.87 L41.44 88.37 L40.77 88.37 L39.09 89.71 L38.59 90.05 L38.42 90.55 L38.42 90.89 L38.08 91.39 L37.75 92.23 L37.75 92.57 L37.58 93.74 L37.58 94.24 L37.58 94.41",
-            fill: "none",
-            stroke: "red",
-            strokeLinecap: "round",
-            strokeLinejoin: "round",
-            strokeWidth: 2,
-            vectorEffect: "non-scaling-stroke",
-          }]]
-          //this.annotations.model.annotations = loc;
-          this.annotations.setAnnotations(loc)
+          console.log(this.refs.edit,'------')
+          /*const button = new OpenSeadragon.Button({ element: this.refs.edit, })
+          button.addHandler('click',(e)=>{
+            console.log(e,'=========')
+          })*/
+          new OpenSeadragon.Control()
 
       }
     }
-  }*/
+  }
 
   handleMouseWheel(event){
     let wheelDirection = event.deltaY;
@@ -190,15 +164,17 @@ class Image extends React.Component{
 
     return (<Page inner>
       <div className={styles.mainWrapper}>
-        {/*<div className={styles.tool}>
+        <div className={styles.tool}>
           {
             iconType.map((icon, index) => {
               return <Tooltip title={toolTip[index]} key={index}>
-                <Icon type={icon} onClick={this.optionPic.bind(this, icon, index)}/>
+                <span ref={icon}>
+                  <Icon type={icon} onClick={this.optionPic.bind(this, icon, index)} />
+                </span>
               </Tooltip>
             })
           }
-        </div>*/}
+        </div>
         <div id="openseadragon1" style={{width: '100%',height: '95%'}} />
         <div className={styles.miniMapWrapper}>
           <div className={styles.readSlider}>
