@@ -76,7 +76,7 @@ class Image extends React.Component{
       annotations && annotations.length?
         annotations.map((anno, index)=>{
           if(index%2){
-            let annoInfo = {type:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1 }
+            let annoInfo = {type:annoMark[(index-results.length+1)/2-1], anno_id: (index+1)/2-1 }
             postData[patientIndex].push(annoInfo)
           }
 
