@@ -24,41 +24,34 @@ class Image extends React.Component{
   }
 
   componentDidMount () {
-    const { dispatch } = this.props;
+    const { dispatch, app:{results} } = this.props;
+    console.log(results,'======')
     this.openSeadragonInfo()
     let annotations = this.annotations.model.annotations;
     let annoMark = this.annotations.model.showSelect;
     let postData = []
-    annotations && annotations.length?
-      annotations.map((anno, index)=>{
-        if(index%2){
-          let annoInfo = {type:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1 }
-          postData.push(annoInfo)
-        }
-
+    results && results.length?
+      results.map((anno, index)=>{
+        let annoInfo = {conclusion:anno.conclusion, anno_id: index }
+        postData.push(annoInfo)
       }) : null
     dispatch({type: 'app/labelsList', payload: postData})
   }
 
   componentDidUpdate ( prevProps ) {
-    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList, patientIndex }, dispatch } = this.props;
+    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList, patientIndex, saveLabelState }, dispatch } = this.props;
     if ( picUrl && picState ) {
       this.viewer && this.viewer.destroy()
       this.openSeadragonInfo()
-      let annotations = this.annotations.model.annotations;
-      //let annoMark = this.annotations.model.showSelect;
-     /* let postData = []
+      let postData = []
       postData[patientIndex] = []
-      annotations && annotations.length?
-        annotations.map((anno, index)=>{
-          if(index%2){
-            let annoInfo = {type:"unknown", anno_id: (index+1)/2-1 }
-            postData[patientIndex].push(annoInfo)
-          }
-
+      results && results.length?
+        results.map((anno, index)=>{
+          let annoInfo = {conclusion:anno.conclusion, anno_id: index }
+          postData[patientIndex].push(annoInfo)
         }) : null
       dispatch({type: 'app/labelsList', payload: postData})
-      dispatch({type: 'app/addLabel', payload: false})*/
+      dispatch({type: 'app/addLabel', payload: false})
 
       dispatch({ type: 'app/picState', payload: false })
     }
@@ -70,29 +63,32 @@ class Image extends React.Component{
     if (addLabelState) {
       let annotations = this.annotations.model.annotations;
       let annoMark = this.annotations.model.showSelect;
+      console.log(annoMark)
       let postData = []
       postData[patientIndex] = []
-      console.log(annotations,'===anno====')
       annotations && annotations.length?
         annotations.map((anno, index)=>{
+          console.log(index)
           if(index%2){
-            let annoInfo = {type:annoMark[(index-results.length+1)/2-1], anno_id: (index+1)/2-1 }
+            let annoInfo = {conclusion:annoMark[(index-1)/2], anno_id: (index-1)/2 }
             postData[patientIndex].push(annoInfo)
           }
-
         }) : null
-      dispatch({type: 'app/labelsList', payload: postData})
+      labelsList[patientIndex] = postData[patientIndex]
+      dispatch({type: 'app/labelsList', payload: labelsList})
       dispatch({type: 'app/addLabel', payload: false})
     }
 
     if(deleteState){
-      console.log(deleteLabelIndex,'555555')
       labelsList[patientIndex].splice(deleteLabelIndex, 1)
-      console.log(labelsList,'-----9999')
       let annoIndex = (deleteLabelIndex+1) * 2 - 1
       this.annotations.model.annotations.splice(annoIndex-1,2)
       dispatch({ type: 'app/labelsList', payload: labelsList })
       dispatch({ type: 'app/deleteLabel', payload: {deleteState: false} })
+    }
+    if(saveLabelState) {
+      this.saveLabel()
+      dispatch({ type: 'app/saveLabels', payload: false })
     }
   }
 
@@ -116,7 +112,7 @@ class Image extends React.Component{
       isibilityRatio: 0.4,
       minZoomLevel: 0.9,
       maxZoomLevel: 40,
-      zoomPerClick: 4,
+      zoomPerClick: 2,
       constrainDuringPan: true,
       panVertical: true,
       showSequenceControl:true,
@@ -125,6 +121,7 @@ class Image extends React.Component{
     this.annotations = new OpenSeadragon.Annotations({ viewer })
 
     let loc = []
+    let mark = []
     results && results.length?
       results.map((item,index)=>{
         let anno = [
@@ -140,9 +137,13 @@ class Image extends React.Component{
           }
         ]
         loc.push(anno)
+        mark.push(item.conclusion)
+        loc.push(anno)
       }):null
-    this.annotations.model.annotations = loc;
     this.annotations.setAnnotations(loc)
+    //this.annotations.model.annotations = loc;
+    this.annotations.model.showSelect = mark;
+
   }
 
   optionPic ( type, index ) {
@@ -226,13 +227,14 @@ class Image extends React.Component{
   }
   saveLabel(){
     const { app: { picId, results, allResult } } = this.props;
-    let annotations = this.annotations.model.annotations.slice(results.length);
+    //let annotations = this.annotations.model.annotations.slice(results.length);
+    let annotations = this.annotations.model.annotations;
     let annoMark = this.annotations.model.showSelect.reverse();
     let postData = []
     annotations && annotations.length?
       annotations.map((anno, index)=>{
         if(index%2){
-          let annoInfo = {id: picId, anno: anno[1].d, type:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1, width: allResult.width, height: allResult.height }
+          let annoInfo = {id: picId, anno: anno[1].d, conclusion:annoMark[(index+1)/2-1], anno_id: (index+1)/2-1, width: allResult.width, height: allResult.height }
           postData.push(annoInfo)
         }
 
@@ -265,7 +267,9 @@ class Image extends React.Component{
           </div>
           {/*<div id="miniMap" className={styles.miniMap}/>*/}
         </div>
+{/*
         <Button onClick={this.saveLabel.bind(this)} style={{marginTop: 20,float: 'right'}} type='primary'>保存所有标记</Button>
+*/}
       </div>
 
     </Page>);

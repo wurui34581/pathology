@@ -1,5 +1,5 @@
 const APIV1 = '/api/v1'
-const APIV2 = 'http://192.168.10.173:8070'
+const APIV2 = 'http://192.168.10.178:8080'
 
 module.exports = {
   name: '病理标注工具',
@@ -8,7 +8,7 @@ module.exports = {
   logo: '/public/logo.png',
   iconFontCSS: '/public/iconfont.css',
   iconFontJS: '/public/iconfont.js',
-  CORS: ['http://192.168.10.173:8070'],
+  CORS: ['http://192.168.10.178:8080'],
   openPages: ['/login'],
   apiPrefix: '/api/v1',
   APIV1,

@@ -112,6 +112,9 @@ class App extends React.Component{
       },
       deleteLabel(index) {
         dispatch({ type: 'app/deleteLabel', payload: {index, deleteState: true} })
+      },
+      saveLabels() {
+        dispatch({ type: 'app/saveLabels', payload: true })
       }
     }
 

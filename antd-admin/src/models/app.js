@@ -33,6 +33,7 @@ export default {
     deleteState: false,
     labelIndex: 0,
     deleteLabelIndex: 0,
+    saveLabelState: false,
     menuPopoverVisible: false,
     siderFold: window.localStorage.getItem(`${prefix}siderFold`) === 'true',
     darkTheme: window.localStorage.getItem(`${prefix}darkTheme`) === 'true',
@@ -250,6 +251,12 @@ export default {
       return {
         ...state,
         patientIndex: payload,
+      }
+    },
+    saveLabels (state, { payload }) {
+      return {
+        ...state,
+        saveLabelState: payload,
       }
     },
 

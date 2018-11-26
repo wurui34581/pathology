@@ -14,8 +14,8 @@ const conclusionDes = [{
   data: 'normal',
   des: '正常'
 },{
-  data: 'benign',
-  des: '良性病变'
+  data: 'abnormal',
+  des: '异常'
 },{
   data: 'dcis',
   des: '原位癌'
@@ -40,8 +40,8 @@ class Result extends React.Component {
       render: (text)=><span>{text+1}</span>,
     }, {
       title: '结论',
-      dataIndex: 'type',
-      key: 'type',
+      dataIndex: 'conclusion',
+      key: 'conclusion',
       render: (text)=>{
         let conclusion = conclusionDes.find((c)=>{return c.data === text})
         return (<span>{conclusion && conclusion.des}</span>)
@@ -71,6 +71,11 @@ class Result extends React.Component {
   deleteLabel(index){
     const { deleteLabel } = this.props
     deleteLabel(index)
+  }
+
+  saveLabels() {
+    const { saveLabels } = this.props
+    saveLabels()
   }
 
   render () {
@@ -115,6 +120,7 @@ class Result extends React.Component {
                    };
                  }}/>
           <Button type="primary" block onClick={this.addLabel.bind(this)}>标注完成后点此添加</Button>
+          <Button type="danger" block onClick={this.saveLabels.bind(this)} style={{marginTop: 10}}>保存所有标记</Button>
         </div>
 
 
