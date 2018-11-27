@@ -35,6 +35,7 @@ export default {
     deleteLabelIndex: 0,
     saveLabelState: false,
     menuPopoverVisible: false,
+    resultsOnload: false,
     siderFold: window.localStorage.getItem(`${prefix}siderFold`) === 'true',
     darkTheme: window.localStorage.getItem(`${prefix}darkTheme`) === 'true',
     isNavbar: document.body.clientWidth < 769,
@@ -66,14 +67,17 @@ export default {
         }, 300)
       }
     },
-
   },
   effects: {
 
     * query ({
       payload,
     }, { call, put, select }) {
-      const { success, user } = yield call(query, payload)
+      //const { success, user } = yield call(query, payload)
+      const { success, user } = {success: true, user: {id: 0,
+          username: 'admin',
+          password: 'admin',
+          permissions: 'admin'}}
       const { locationPathname } = yield select(_ => _.app)
       if (success && user) {
         /*const { list } = yield call(menusService.query)
@@ -95,6 +99,7 @@ export default {
           type: 'updateState',
           payload: {
             user,
+            //cancerList,
             //permissions,
             //menu,
           },
@@ -152,7 +157,7 @@ export default {
         //const pic = ['/public/1.1.jpg','/public/1.2.jpg','/public/1.3.jpg','/public/1.4.jpg']
         yield put({ type: 'savePatient', payload: data.list })
         yield put({ type: 'getPic', payload: data.list[0].dzi_path })
-        yield put({ type: 'getResults', payload: data.list[0].result })
+        yield put({ type: 'getResults', payload: {results:data.list[0].result, resultsOnload: true} })
         yield put({ type: 'getPicId', payload: data.list[0].id })
         yield put({ type: 'getAll', payload: data.list[0] })
 
@@ -166,7 +171,6 @@ export default {
       if(data.success){
         yield put({ type: 'savePatient', payload: data.list })
       }
-
     },
 
     * getResult ({ payload }, { call, put }) {
@@ -211,7 +215,8 @@ export default {
     getResults(state, { payload }){
       return {
         ...state,
-        results: payload
+        results: payload.results,
+        resultsOnload: payload.resultsOnload
       }
     },
     getAll(state, { payload }){
@@ -257,71 +262,6 @@ export default {
       return {
         ...state,
         saveLabelState: payload,
-      }
-    },
-
-    result (state, { payload }) {
-      return {
-        ...state,
-        //result: payload.data
-        result: [{
-          size: 23,
-          level: 2,
-          label: [{
-            x: 0.1,
-            y: 0.1
-          },{
-            x: 0.2,
-            y: 0.2
-          },{
-            x: 0.15,
-            y: 0.2
-          },{
-            x: 0.1,
-            y: 0.2
-          },{
-            x: 0.1,
-            y: 0.1
-          }]
-        },{
-          size: 23,
-          level: 2,
-          label: [{
-            x: 0.1,
-            y: 0.1
-          },{
-            x: 0.2,
-            y: 0.2
-          },{
-            x: 0.15,
-            y: 0.2
-          },{
-            x: 0.1,
-            y: 0.2
-          },{
-            x: 0.1,
-            y: 0.1
-          }]
-        },{
-          size: 23,
-          level: 2,
-          label: [{
-            x: 0.1,
-            y: 0.1
-          },{
-            x: 0.2,
-            y: 0.2
-          },{
-            x: 0.15,
-            y: 0.2
-          },{
-            x: 0.1,
-            y: 0.2
-          },{
-            x: 0.1,
-            y: 0.1
-          }]
-        }]
       }
     },
 

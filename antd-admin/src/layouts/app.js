@@ -26,6 +26,7 @@ class App extends React.Component{
   }
 
   componentDidMount () {
+    console.log('999')
     this.props.dispatch({ type:'app/patientList' })
   }
 
@@ -79,9 +80,8 @@ class App extends React.Component{
       darkTheme,
       navOpenKeys,
       getPic (id, record, index) {
-        console.log(index,'6666')
         dispatch({ type: 'app/getPic', payload: id })
-        dispatch({ type: 'app/getResults', payload: record.result })
+        dispatch({ type: 'app/getResults', payload: {results:record.result,resultsOnload:false} })
         dispatch({ type: 'app/getPicId', payload: record.id })
         dispatch({ type: 'app/getAll', payload: record })
         dispatch({ type: 'app/picState', payload: true })
@@ -105,7 +105,7 @@ class App extends React.Component{
         dispatch({ type: 'app/currentLabel', payload: { label, index } })
       },
       confirmResult ( type ) {
-        dispatch({ type: 'app/confirmResult', payload: { type, id: allResult.id } })
+        dispatch({ type: 'app/confirmResult', payload: { conclusion: type, id: allResult.id } })
       },
       addLabel() {
         dispatch({ type: 'app/addLabel', payload: true })
@@ -141,7 +141,7 @@ class App extends React.Component{
             trigger={null}
             collapsible
             collapsed={siderFold}
-            width={250}>
+            width={300}>
             <MyLayout.PatientList {...siderProps} />
           </Sider>}
           <Layout style={{ height: '100vh' }} id="mainContainer">

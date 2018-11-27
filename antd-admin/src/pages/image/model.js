@@ -13,6 +13,7 @@ export default modelExtend(model, {
       const data = yield call(createLabel,payload)
       if (data.success) {
         message.success('保存标记成功')
+        yield put({type: 'app/upLoadPatientList'})
       } else {
         message.success('保存标记失败')
       }

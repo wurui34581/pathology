@@ -1,14 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import { Menu, Icon, Popover, Layout, Drawer, Table, Progress , Modal, Button } from 'antd'
+import { Menu, Icon, Popover, Layout, Drawer, Table, Progress , Modal, Button, Dropdown  } from 'antd'
 import classnames from 'classnames'
 import styles from './Header.less'
 import tus from 'tus-js-client'
 
 const { SubMenu } = Menu;
-
-
 
 
 export default class Header extends React.Component {

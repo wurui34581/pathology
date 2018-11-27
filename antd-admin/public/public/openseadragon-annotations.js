@@ -1732,8 +1732,8 @@ var reactToGeneralAction = function reactToGeneralAction(model) {
           let labelSelect = '<div style="color: #e6e6e6ba; padding-bottom: 5px; border-bottom: solid 1px #e6e6e600">请选择标注备注</div>' +
             '<select id="selectLabel" style="width: 100%; background: #000; border: none; color: #e6e6e6;">' +
             '<option value="normal">正常</option>' +
-            '<option value="benign">肝炎</option>' +
-            '<option value="dcis">肝癌</option>' +
+            '<option value="hepatitis">肝炎</option>' +
+            '<option value="liver_cancer">肝癌</option>' +
             '<option value="unknown">其他</option>' +
             '</select>' +
             '<input id="submit" value="确定" type="submit" style="float: right; background: #000; border: none; color: #e6e6e6; border-radius: 3px; padding: 3px; margin-top: 10px; width: 36px;"/>';

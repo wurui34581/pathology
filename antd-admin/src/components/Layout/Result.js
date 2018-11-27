@@ -14,17 +14,14 @@ const conclusionDes = [{
   data: 'normal',
   des: '正常'
 },{
-  data: 'abnormal',
-  des: '异常'
+  data: 'hepatitis',
+  des: '肝炎'
 },{
-  data: 'dcis',
-  des: '原位癌'
-},{
-  data: 'nst',
-  des: '浸润性癌'
+  data: 'liver_cancer',
+  des: '肝癌'
 },{
   data: 'unknown',
-  des: '未知'
+  des: '其他'
 }]
 
 class Result extends React.Component {
@@ -50,7 +47,7 @@ class Result extends React.Component {
       title: '操作',
       key: 'action',
       render: (text, record, index) => (
-        <span onClick={this.deleteLabel.bind(this, index)} className={styles.actionStyle}>删除</span>
+        <span onClick={(e)=>{this.deleteLabel( index, e)}} className={styles.actionStyle}>删除</span>
       ),
     },];
   }
@@ -68,7 +65,8 @@ class Result extends React.Component {
     const { addLabel } = this.props;
     addLabel()
   }
-  deleteLabel(index){
+  deleteLabel(index, e){
+    e.stopPropagation();
     const { deleteLabel } = this.props
     deleteLabel(index)
   }
@@ -80,7 +78,7 @@ class Result extends React.Component {
 
   render () {
     const { results, allResult, labelsList, patientIndex } = this.props;
-    let conclusion = allResult && conclusionDes.find((c)=>{ return c.data === allResult.conclusion })
+    let conclusion = allResult && allResult.conclusion &&  conclusionDes.find((c)=>{ return c.data === allResult.conclusion })
     return (
       <div className={styles.resultWrapper}>
         {/*<Tabs type="card">
@@ -116,10 +114,10 @@ class Result extends React.Component {
                  rowKey={(record, key) => key}
                  onRow={(record,index) => {
                    return {
-                     //onClick: () => {this.labelInfo( record, index )},
+                     onClick: () => {this.labelInfo( record, index )},
                    };
                  }}/>
-          <Button type="primary" block onClick={this.addLabel.bind(this)}>标注完成后点此添加</Button>
+          <Button type="primary" block onClick={this.addLabel.bind(this)}>标注完成后点此添加到列表</Button>
           <Button type="danger" block onClick={this.saveLabels.bind(this)} style={{marginTop: 10}}>保存所有标记</Button>
         </div>
 
@@ -129,10 +127,10 @@ class Result extends React.Component {
           <div className={styles.buttonGroup}>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
               <Button type="primary" onClick={this.confirmResult.bind(this, 'normal')} style={{width: 120}}>正常</Button>
-              <Button type="danger" onClick={this.confirmResult.bind(this, 'dcis')} style={{width: 120}}>肝炎</Button>
+              <Button type="danger" onClick={this.confirmResult.bind(this, 'hepatitis')} style={{width: 120}}>肝炎</Button>
             </div>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>
-              <Button type="default" onClick={this.confirmResult.bind(this, 'nst')} style={{width: 120}}>肝癌</Button>
+              <Button type="default" onClick={this.confirmResult.bind(this, 'liver_cancer')} style={{width: 120}}>肝癌</Button>
               <Button type="dashed" onClick={this.confirmResult.bind(this, 'unknown')} style={{width: 120}}>其他</Button>
             </div>
           </div>

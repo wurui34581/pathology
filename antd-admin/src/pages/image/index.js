@@ -19,27 +19,63 @@ class Image extends React.Component{
     super(props);
     this.state = {
       loading: true,
-      curPage: 0
+      curPage: 0,
+      resultsState: true,
+      turnOff: true
     }
   }
 
   componentDidMount () {
-    const { dispatch, app:{results} } = this.props;
-    console.log(results,'======')
+    const { dispatch, app:{results, patientIndex, labelsList} } = this.props;
     this.openSeadragonInfo()
-    let annotations = this.annotations.model.annotations;
-    let annoMark = this.annotations.model.showSelect;
-    let postData = []
-    results && results.length?
-      results.map((anno, index)=>{
-        let annoInfo = {conclusion:anno.conclusion, anno_id: index }
-        postData.push(annoInfo)
-      }) : null
-    dispatch({type: 'app/labelsList', payload: postData})
   }
 
   componentDidUpdate ( prevProps ) {
-    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList, patientIndex, saveLabelState }, dispatch } = this.props;
+    const { resultsState, turnOff } = this.state;
+    const { app: { picUrl, results, labelState, picState, labelIndex, addLabelState, deleteState, deleteLabelIndex, labelsList, patientIndex, saveLabelState, resultsOnload }, dispatch } = this.props;
+    if( resultsState && results && results.length ){
+      let postData = []
+      postData[patientIndex] = []
+      results && results.length?
+        results.map((anno, index)=>{
+          let annoInfo = {conclusion:anno.conclusion, anno_id: index }
+          postData[patientIndex].push(annoInfo)
+        }) : null
+      labelsList[patientIndex] = postData[patientIndex]
+      dispatch({type: 'app/labelsList', payload: labelsList})
+      this.setState({
+        resultsState: false
+      })
+    }
+    if(resultsOnload && turnOff){
+      let loc = []
+      let mark = []
+      results && results.length?
+        results.map((item,index)=>{
+          let anno = [
+            'path',
+            {
+              d:item.annotation,
+              'fill': "none",
+              'stroke': "blue",
+              'stroke-linecap': "round",
+              'stroke-linejoin': "round",
+              'stroke-width': "2",
+              'vector-effect': "non-scaling-stroke",
+            }
+          ]
+          loc.push(anno)
+          mark.push(item.conclusion)
+          loc.push(anno)
+        }):null
+      this.annotations.setAnnotations(loc)
+      //this.annotations.model.annotations = loc;
+      this.annotations.model.showSelect = mark;
+      dispatch({type: 'app/getResults',payload:{results,resultsOnload:false}})
+      this.setState({
+        turnOff: false
+      })
+    }
     if ( picUrl && picState ) {
       this.viewer && this.viewer.destroy()
       this.openSeadragonInfo()
@@ -56,7 +92,9 @@ class Image extends React.Component{
       dispatch({ type: 'app/picState', payload: false })
     }
     if( labelState === !prevProps.labelState ){
-      this.viewer.viewport.panTo(new OpenSeadragon.Point(results[labelIndex].area_center.x/100,results[labelIndex].area_center.y/100), true)
+      this.viewer.viewport.panTo(new OpenSeadragon.Point(
+        results && results[labelIndex] && results[labelIndex].area_center?results[labelIndex].area_center.x/100:0.5,
+        results && results[labelIndex] && results[labelIndex].area_center?results[labelIndex].area_center.y/100:0.5), true)
         .zoomTo(3);
     }
 
@@ -64,6 +102,7 @@ class Image extends React.Component{
       let annotations = this.annotations.model.annotations;
       let annoMark = this.annotations.model.showSelect;
       console.log(annoMark)
+      console.log(this.annotations.model)
       let postData = []
       postData[patientIndex] = []
       annotations && annotations.length?
@@ -81,8 +120,11 @@ class Image extends React.Component{
 
     if(deleteState){
       labelsList[patientIndex].splice(deleteLabelIndex, 1)
+      console.log(deleteLabelIndex,'555')
+      console.log(this.annotations.model,'555')
       let annoIndex = (deleteLabelIndex+1) * 2 - 1
       this.annotations.model.annotations.splice(annoIndex-1,2)
+      this.annotations.model.showSelect.splice(deleteLabelIndex,1)
       dispatch({ type: 'app/labelsList', payload: labelsList })
       dispatch({ type: 'app/deleteLabel', payload: {deleteState: false} })
     }
@@ -94,10 +136,11 @@ class Image extends React.Component{
 
   openSeadragonInfo(){
     const { app: { picUrl, results } } = this.props;
+    console.log(picUrl, results)
 
     this.viewer = OpenSeadragon({
       id: "openseadragon1",
-      prefixUrl: "/public/data/open/images/",
+      prefixUrl: "/public/images/",
       tileSources: `${APIV2}${picUrl}`,
       showNavigator: true,
       navigatorPosition: 'BOTTOM_RIGHT',
@@ -277,4 +320,4 @@ class Image extends React.Component{
 
 }
 
-export default connect(({ app, image, loading }) => ({ app, image, loading }))(Image)
+export default connect(({ app, login, image, loading }) => ({ login, app, image, loading }))(Image)
